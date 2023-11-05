@@ -10,6 +10,8 @@
             <p th:text="'Username: ' + ${user.username}" />
 
             <form action="#" th:action="@{/logout}" th:object="${user}" method="POST">
+                <input type="hidden" name="username" th:field="*{username}" th:value="${user.username}" />
+                <input type="hidden" name="password" th:field="*{password}" th:value="${user.password}" />
                 <input type="submit" value="Logout" />
             </form>
 

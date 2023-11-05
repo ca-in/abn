@@ -119,17 +119,13 @@ public class DemoApplication {
 		return "error";
 	}
 
-	@GetMapping("/logout")
-	public String showLogoutForm(@ModelAttribute("user") User user, Model model) {
-		System.out.println("User " + user.getUsername() + " logged out");
-		return "logout_form";
-	}
-
 	@PostMapping("/logout")
 	public String submitLogoutForm(@ModelAttribute("user") User user, Model model) {
 		try {
 			String username = user.getUsername();
 			String password = user.getPassword();
+
+			System.out.println("DEBUG: User " + username + " trying to log out");
 
 			if (db.isUserExists(username)) {
 				if(db.isPasswordCorrect(username, password)) {
