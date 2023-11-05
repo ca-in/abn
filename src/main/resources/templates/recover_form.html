@@ -2,13 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>User Registration</title>
+        <title>Recover Password</title>
     </head>
     <body>
-        <form action="#" th:action="@{/register}" th:object="${user}" method="POST">
+        <form action="#" th:action="@{/recover}" th:object="${user}" method="POST">
             <input type="text" name="username" th:field="*{username}" placeholder="Username"/>
-            <input type="password" name="password" th:field="*{password}" placeholder="Password"/>
-            <input type="submit" value="Register"/>
+            <input type="password" name="password" th:field="*{password}" placeholder="New Password"/>
+            <input type="submit" value="Recover"/>
         </form>
     </body>
 </html>

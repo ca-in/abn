@@ -48,4 +48,36 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
+
+    public Boolean isPasswordCorrect(String username, String password) {
+        try {
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT * FROM users WHERE username='" + username + "' AND password='" + password + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+            return rs.next();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    public void loginUser(String username, String password) {
+        try {
+            Statement stmt = conn.createStatement();
+            String sql = "UPDATE users SET online = 1 WHERE username='" + username + "'";
+            stmt.executeUpdate(sql);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void recoverUser(String username, String password) {
+        try {
+            Statement stmt = conn.createStatement();
+            String sql = "UPDATE users SET password = '" + password + "' WHERE username='" + username + "'";
+            stmt.executeUpdate(sql);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
