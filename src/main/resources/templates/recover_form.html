@@ -3,11 +3,16 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>Recover Password</title>
+        <link href="./style.css" rel="stylesheet" type="text/css" media="all">
     </head>
     <body>
         <form action="#" th:action="@{/recover}" th:object="${user}" method="POST">
+            <h1>Recover Password</h1>
+
             <input type="text" name="username" th:field="*{username}" placeholder="Username"/>
+            <br>
             <input type="password" name="password" th:field="*{password}" placeholder="New Password"/>
+            <br>
             <input type="submit" value="Recover"/>
         </form>
     </body>

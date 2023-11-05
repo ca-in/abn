@@ -3,11 +3,16 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>User Registration</title>
+        <link href="./style.css" rel="stylesheet" type="text/css" media="all">
     </head>
     <body>
         <form action="#" th:action="@{/register}" th:object="${user}" method="POST">
+            <h1>Register New User</h1>
+
             <input type="text" name="username" th:field="*{username}" placeholder="Username"/>
+            <br>
             <input type="password" name="password" th:field="*{password}" placeholder="Password"/>
+            <br>
             <input type="submit" value="Register"/>
         </form>
     </body>

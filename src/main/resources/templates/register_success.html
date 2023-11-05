@@ -1,12 +1,15 @@
 <!DOCTYPE HTML>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Registration Successful</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link href="./style.css" rel="stylesheet" type="text/css" media="all">
     </head>
     <body>
-        <h1>Result</h1>
-        <p th:text="'username: ' + ${user.username}" />
-        <p th:text="'password: ' + ${user.password}" />
+        <div class="container">
+            <h1>Result</h1>
+            <p th:text="'username: ' + ${user.username}" />
+            <p th:text="'password: ' + ${user.password}" />
+        </div>
     </body>
 </html>
