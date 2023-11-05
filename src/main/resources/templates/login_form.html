@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>User Registration</title>
+        <title>Login</title>
         <link href="./style.css" rel="stylesheet" type="text/css" media="all">
     </head>
     <body>
@@ -10,9 +10,9 @@
         <form action="#" th:action="@{/login}" th:object="${user}" method="POST">
             <h1>Login</h1>
 
-            <input type="text" name="username" th:field="*{username}" placeholder="Username"/>
+            <input type="text" name="username" th:field="*{username}" placeholder="Username" required/>
             <br>
-            <input type="password" name="password" th:field="*{password}" placeholder="Password"/>
+            <input type="password" name="password" th:field="*{password}" placeholder="Password" required/>
             <br>
             <input type="submit" value="Login"/>
         </form>

@@ -42,15 +42,35 @@ public class DemoApplication {
 			String username = user.getUsername();
 			String password = user.getPassword();
 
-			if (!db.isUserExists(username)) {
-				db.registerUser(username, password);;
-				model.addAttribute("user", user);
-				System.out.println("New user " + username + " registered");
-				return "register_success";
-			} else {
-				System.out.println("User " + username + " already exists");
-				return "register_form";
+			if(username.isEmpty()){
+				System.out.println("Username is empty");
+				return "invalid_user";
 			}
+
+			if (!username.matches("[a-zA-Z0-9]+")) {
+				System.out.println("Username contains invalid characters");
+				return "invalid_user";
+			}
+
+			if(password.isEmpty()){
+				System.out.println("Password is empty");
+				return "invalid_password";
+			}
+
+			if (!password.matches("[a-zA-Z0-9]+")) {
+				System.out.println("Password contains invalid characters");
+				return "invalid_password";
+			}
+
+			if (db.isUserExists(username)) {
+				System.out.println("User " + username + " already exists");
+				return "invalid_user";
+			}
+
+			db.registerUser(username, password);;
+			model.addAttribute("user", user);
+			System.out.println("New user " + username + " registered");
+			return "register_success";
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -69,21 +89,41 @@ public class DemoApplication {
 			String username = user.getUsername();
 			String password = user.getPassword();
 
-			if (db.isUserExists(username)) {
-				if(db.isPasswordCorrect(username, password)) {
-					db.loginUser(username, password);
-					model.addAttribute("user", user);
-					System.out.println("User " + username + " logged in");
-					model.addAttribute("online_users", db.getOnlineUsers()); // Adds list of all online users to model
-					return "login_success";
-				} else {
-					System.out.println("Password is incorrect");
-					return "invalid_password";
-				}
-			} else {
+			if(username.isEmpty()){
+				System.out.println("Username is empty");
+				return "invalid_user";
+			}
+
+			if (!username.matches("[a-zA-Z0-9]+")) {
+				System.out.println("Username contains invalid characters");
+				return "invalid_user";
+			}
+
+			if(password.isEmpty()){
+				System.out.println("Password is empty");
+				return "invalid_password";
+			}
+
+			if (!password.matches("[a-zA-Z0-9]+")) {
+				System.out.println("Password contains invalid characters");
+				return "invalid_password";
+			}
+
+			if (!db.isUserExists(username)) {
 				System.out.println("User " + username + " does not exist");
 				return "invalid_user";
 			}
+
+			if(!db.isPasswordCorrect(username, password)) {
+				System.out.println("Password is incorrect");
+				return "invalid_password";
+			}
+
+			db.loginUser(username, password);
+			model.addAttribute("user", user);
+			System.out.println("User " + username + " logged in");
+			model.addAttribute("online_users", db.getOnlineUsers()); /* Adds list of all online users to model */
+			return "login_success";
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -102,17 +142,37 @@ public class DemoApplication {
 			String username = user.getUsername();
 			String password = user.getPassword();
 
-			if (db.isUserExists(username)) {
-				String password_old = db.getPasswordOld(username);
-				db.recoverUser(username, password);
-				model.addAttribute("user", user);
-				model.addAttribute("password_old", password_old);
-				System.out.println("User " + username + " recovered");
-				return "recover_success";
-			} else {
+			if(username.isEmpty()){
+				System.out.println("Username is empty");
+				return "invalid_user";
+			}
+
+			if (!username.matches("[a-zA-Z0-9]+")) {
+				System.out.println("Username contains invalid characters");
+				return "invalid_user";
+			}
+
+			if(password.isEmpty()){
+				System.out.println("Password is empty");
+				return "invalid_password";
+			}
+
+			if (!password.matches("[a-zA-Z0-9]+")) {
+				System.out.println("Password contains invalid characters");
+				return "invalid_password";
+			}
+
+			if (!db.isUserExists(username)) {
 				System.out.println("User " + username + " does not exist");
 				return "invalid_user";
 			}
+
+			String password_old = db.getPasswordOld(username);
+			db.recoverUser(username, password);
+			model.addAttribute("user", user);
+			model.addAttribute("password_old", password_old);
+			System.out.println("User " + username + " recovered");
+			return "recover_success";
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -125,22 +185,40 @@ public class DemoApplication {
 			String username = user.getUsername();
 			String password = user.getPassword();
 
-			System.out.println("DEBUG: User " + username + " trying to log out");
+			if(username.isEmpty()){
+				System.out.println("Username is empty");
+				return "invalid_user";
+			}
 
-			if (db.isUserExists(username)) {
-				if(db.isPasswordCorrect(username, password)) {
-					db.logoutUser(username, password);
-					model.addAttribute("user", user);
-					System.out.println("User " + username + " logged out");
-					return "logout_success";
-				} else {
-					System.out.println("Password is incorrect");
-					return "invalid_password";
-				}
-			} else {
+			if (!username.matches("[a-zA-Z0-9]+")) {
+				System.out.println("Username contains invalid characters");
+				return "invalid_user";
+			}
+
+			if(password.isEmpty()){
+				System.out.println("Password is empty");
+				return "invalid_password";
+			}
+
+			if (!password.matches("[a-zA-Z0-9]+")) {
+				System.out.println("Password contains invalid characters");
+				return "invalid_password";
+			}
+
+			if (!db.isUserExists(username)) {
 				System.out.println("User " + username + " does not exist");
 				return "invalid_user";
 			}
+
+			if(!db.isPasswordCorrect(username, password)) {
+				System.out.println("Password is incorrect");
+				return "invalid_password";
+			}
+
+			db.logoutUser(username, password);
+			model.addAttribute("user", user);
+			System.out.println("User " + username + " logged out");
+			return "logout_success";
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
