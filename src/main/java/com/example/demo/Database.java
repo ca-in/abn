@@ -1,5 +1,8 @@
 package com.example.demo;
 
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -53,16 +56,23 @@ public class Database {
     public Boolean isPasswordCorrect(String username, String password) {
         try {
             Statement stmt = conn.createStatement();
-            String sql = "SELECT * FROM users WHERE username='" + username + "' AND password='" + password + "'";
+            String sql = "SELECT * FROM users WHERE username='" + username + "'";
             ResultSet rs = stmt.executeQuery(sql);
-            return rs.next();
+
+            if(!rs.next())
+                return false;
+
+            String hashedPassword = rs.getString("password");
+            System.out.println("Hashed password: " + hashedPassword);
+            System.out.println("Password: " + password);
+            return BCrypt.checkpw(password, hashedPassword);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return false;
     }
 
-    public void loginUser(String username, String password) {
+    public void loginUser(String username) {
         try {
             Statement stmt = conn.createStatement();
             String sql = "UPDATE users SET online = 1 WHERE username='" + username + "'";
@@ -71,7 +81,7 @@ public class Database {
             System.out.println(e.getMessage());
         }
     }
-
+/*
     public String getPasswordOld(String username){
         try {
             Statement stmt = conn.createStatement();
@@ -83,7 +93,7 @@ public class Database {
         }
         return "";
     }
-
+*/
     public void recoverUser(String username, String password) {
         try {
             Statement stmt = conn.createStatement();
@@ -114,7 +124,7 @@ public class Database {
     public void logoutUser(String username, String password) {
         try {
             Statement stmt = conn.createStatement();
-            String sql = "UPDATE users SET online = 0 WHERE username='" + username + "' AND password='" + password + "'";
+            String sql = "UPDATE users SET online = 0 WHERE username='" + username + "'";
             stmt.executeUpdate(sql);
         } catch (Exception e) {
             System.out.println(e.getMessage());

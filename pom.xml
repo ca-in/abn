@@ -46,6 +46,13 @@
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.43.2.2</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>6.1.5</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

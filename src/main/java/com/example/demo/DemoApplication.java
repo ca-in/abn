@@ -1,6 +1,7 @@
 package com.example.demo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,11 @@ public class DemoApplication {
 		try {
 			Connection conn = DriverManager.getConnection(url);
 			if (conn != null) {
-				System.out.println("Connected to the database");
-
 				Statement stmt = conn.createStatement();
-				String sql = "CREATE TABLE IF NOT EXISTS users (id integer PRIMARY KEY, username text NOT NULL UNIQUE, password text NOT NULL, online integer DEFAULT 0)";
+				String sql = "CREATE TABLE IF NOT EXISTS users (username TEXT NOT NULL PRIMARY KEY, password TEXT NOT NULL, online INTEGER DEFAULT 0)";
 				stmt.execute(sql);
 				db.setConnection(conn);
+				System.out.println("Connected to the database");
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -67,7 +67,8 @@ public class DemoApplication {
 				return "invalid_user";
 			}
 
-			db.registerUser(username, password);;
+			String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+			db.registerUser(username, hashedPassword);
 			model.addAttribute("user", user);
 			System.out.println("New user " + username + " registered");
 			return "register_success";
@@ -119,10 +120,10 @@ public class DemoApplication {
 				return "invalid_password";
 			}
 
-			db.loginUser(username, password);
+			db.loginUser(username);
 			model.addAttribute("user", user);
-			System.out.println("User " + username + " logged in");
 			model.addAttribute("online_users", db.getOnlineUsers()); /* Adds list of all online users to model */
+			System.out.println("User " + username + " logged in");
 			return "login_success";
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -167,10 +168,9 @@ public class DemoApplication {
 				return "invalid_user";
 			}
 
-			String password_old = db.getPasswordOld(username);
-			db.recoverUser(username, password);
+			String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+			db.recoverUser(username, hashedPassword);
 			model.addAttribute("user", user);
-			model.addAttribute("password_old", password_old);
 			System.out.println("User " + username + " recovered");
 			return "recover_success";
 		} catch (Exception e) {
