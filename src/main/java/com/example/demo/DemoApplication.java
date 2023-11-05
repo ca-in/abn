@@ -74,6 +74,7 @@ public class DemoApplication {
 					db.loginUser(username, password);
 					model.addAttribute("user", user);
 					System.out.println("User " + username + " logged in");
+					model.addAttribute("online_users", db.getOnlineUsers()); // Adds list of all online users to model
 					return "login_success";
 				} else {
 					System.out.println("Password is incorrect");
@@ -108,6 +109,38 @@ public class DemoApplication {
 				model.addAttribute("password_old", password_old);
 				System.out.println("User " + username + " recovered");
 				return "recover_success";
+			} else {
+				System.out.println("User " + username + " does not exist");
+				return "invalid_user";
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return "error";
+	}
+
+	@GetMapping("/logout")
+	public String showLogoutForm(@ModelAttribute("user") User user, Model model) {
+		System.out.println("User " + user.getUsername() + " logged out");
+		return "logout_form";
+	}
+
+	@PostMapping("/logout")
+	public String submitLogoutForm(@ModelAttribute("user") User user, Model model) {
+		try {
+			String username = user.getUsername();
+			String password = user.getPassword();
+
+			if (db.isUserExists(username)) {
+				if(db.isPasswordCorrect(username, password)) {
+					db.logoutUser(username, password);
+					model.addAttribute("user", user);
+					System.out.println("User " + username + " logged out");
+					return "logout_success";
+				} else {
+					System.out.println("Password is incorrect");
+					return "invalid_password";
+				}
 			} else {
 				System.out.println("User " + username + " does not exist");
 				return "invalid_user";

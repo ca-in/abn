@@ -3,6 +3,7 @@ package com.example.demo;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class Database {
     private Connection conn;
@@ -87,6 +88,33 @@ public class Database {
         try {
             Statement stmt = conn.createStatement();
             String sql = "UPDATE users SET password = '" + password + "' WHERE username='" + username + "'";
+            stmt.executeUpdate(sql);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public ArrayList<String> getOnlineUsers() {
+        ArrayList<String> onlineUsers = new ArrayList<String>();
+
+        try {
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT username FROM users WHERE online = 1";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                onlineUsers.add(rs.getString("username"));
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return onlineUsers;
+    }
+
+    public void logoutUser(String username, String password) {
+        try {
+            Statement stmt = conn.createStatement();
+            String sql = "UPDATE users SET online = 0 WHERE username='" + username + "' AND password='" + password + "'";
             stmt.executeUpdate(sql);
         } catch (Exception e) {
             System.out.println(e.getMessage());

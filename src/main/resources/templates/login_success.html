@@ -7,7 +7,13 @@
     </head>
     <body>
         <div class="container">
-            <p th:text="'username: ' + ${user.username}" />
+            <p th:text="'Username: ' + ${user.username}" />
+
+            <form action="#" th:action="@{/logout}" th:object="${user}" method="POST">
+                <input type="submit" value="Logout" />
+            </form>
+
+            <p th:text="'Online: ' + ${online_users}" />
         </div>
     </body>
 </html>
