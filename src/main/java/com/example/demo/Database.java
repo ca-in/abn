@@ -71,6 +71,18 @@ public class Database {
         }
     }
 
+    public String getPasswordOld(String username){
+        try {
+            Statement stmt = conn.createStatement();
+            String sql = "SELECT password FROM users WHERE username='" + username + "'";
+            ResultSet rs = stmt.executeQuery(sql);
+            return rs.getString("password");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return "";
+    }
+
     public void recoverUser(String username, String password) {
         try {
             Statement stmt = conn.createStatement();

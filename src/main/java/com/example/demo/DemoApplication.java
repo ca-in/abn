@@ -9,8 +9,7 @@ import java.sql.*;
 @SpringBootApplication(scanBasePackages = {"com.example.demo"})
 @Controller
 public class DemoApplication {
-	// FIXME
-	private static Database db = new Database();
+	private static final Database db = new Database();
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
@@ -40,13 +39,16 @@ public class DemoApplication {
 	@PostMapping("/register")
 	public String submitForm(@ModelAttribute("user") User user, Model model) {
 		try {
-			if (!db.isUserExists(user.getUsername())) {
-				db.registerUser(user.getUsername(), user.getPassword());
+			String username = user.getUsername();
+			String password = user.getPassword();
+
+			if (!db.isUserExists(username)) {
+				db.registerUser(username, password);;
 				model.addAttribute("user", user);
-				System.out.println("New user " + user.getUsername() + " registered");
+				System.out.println("New user " + username + " registered");
 				return "register_success";
 			} else {
-				System.out.println("User " + user.getUsername() + " already exists");
+				System.out.println("User " + username + " already exists");
 				return "register_form";
 			}
 		} catch (Exception e) {
@@ -64,18 +66,21 @@ public class DemoApplication {
 	@PostMapping("/login")
 	public String submitLoginForm(@ModelAttribute("user") User user, Model model) {
 		try {
-			if (db.isUserExists(user.getUsername())) {
-				if(db.isPasswordCorrect(user.getUsername(), user.getPassword())) {
-					db.loginUser(user.getUsername(), user.getPassword());
+			String username = user.getUsername();
+			String password = user.getPassword();
+
+			if (db.isUserExists(username)) {
+				if(db.isPasswordCorrect(username, password)) {
+					db.loginUser(username, password);
 					model.addAttribute("user", user);
-					System.out.println("User " + user.getUsername() + " logged in");
+					System.out.println("User " + username + " logged in");
 					return "login_success";
 				} else {
 					System.out.println("Password is incorrect");
 					return "invalid_password";
 				}
 			} else {
-				System.out.println("User " + user.getUsername() + " does not exist");
+				System.out.println("User " + username + " does not exist");
 				return "invalid_user";
 			}
 		} catch (Exception e) {
@@ -93,13 +98,18 @@ public class DemoApplication {
 	@PostMapping("/recover")
 	public String submitRecoverForm(@ModelAttribute("user") User user, Model model) {
 		try {
-			if (db.isUserExists(user.getUsername())) {
-				db.recoverUser(user.getUsername(), user.getPassword());
+			String username = user.getUsername();
+			String password = user.getPassword();
+
+			if (db.isUserExists(username)) {
+				String password_old = db.getPasswordOld(username);
+				db.recoverUser(username, password);
 				model.addAttribute("user", user);
-				System.out.println("User " + user.getUsername() + " recovered");
+				model.addAttribute("password_old", password_old);
+				System.out.println("User " + username + " recovered");
 				return "recover_success";
 			} else {
-				System.out.println("User " + user.getUsername() + " does not exist");
+				System.out.println("User " + username + " does not exist");
 				return "invalid_user";
 			}
 		} catch (Exception e) {
